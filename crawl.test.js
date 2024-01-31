@@ -35,7 +35,7 @@ describe("normalizeUrl function", () => {
 });
 
 describe("getURLSFromHTML function", () => {
-  test("get urls from html", () => {
+  test("get absolute urls from html", () => {
     const inputHTMLBody = `
     <html>
       <body>
@@ -49,6 +49,66 @@ describe("getURLSFromHTML function", () => {
     const inputBaseUrl = INPUT_URL;
     const actual = getURLSFromHTML(inputHTMLBody, inputBaseUrl);
     const expected = [INPUT_URL];
+    expect(actual).toEqual(expected);
+  });
+
+  test("get relative urls from html", () => {
+    const inputHTMLBody = `
+    <html>
+      <body>
+        <a href="/path">
+          test.dev
+        </a>
+      </body>
+    </html>
+    `;
+
+    const inputBaseUrl = "https://test.dev";
+    const actual = getURLSFromHTML(inputHTMLBody, inputBaseUrl);
+    const expected = [INPUT_URL];
+    expect(actual).toEqual(expected);
+  });
+
+  test("get multiple urls from html(relative and absolute)", () => {
+    const inputHTMLBody = `
+    <html>
+      <body>
+        <a href="/path">
+          test.dev
+        </a>
+        <a href="${INPUT_URL}">
+          test.dev
+        </a>
+      </body>
+    </html>
+    `;
+
+    const inputBaseUrl = "https://test.dev";
+    const actual = getURLSFromHTML(inputHTMLBody, inputBaseUrl);
+    const expected = [INPUT_URL, INPUT_URL];
+    expect(actual).toEqual(expected);
+  });
+
+  test("get multiple urls from html and exclude invalid url", () => {
+    const inputHTMLBody = `
+    <html>
+      <body>
+        <a href="/path">
+          test.dev
+        </a>
+        <a href="${INPUT_URL}">
+          test.dev
+        </a>
+        <a href="invalid">
+          test.dev
+        </a>
+      </body>
+    </html>
+    `;
+
+    const inputBaseUrl = "https://test.dev";
+    const actual = getURLSFromHTML(inputHTMLBody, inputBaseUrl);
+    const expected = [INPUT_URL, INPUT_URL];
     expect(actual).toEqual(expected);
   });
 });
