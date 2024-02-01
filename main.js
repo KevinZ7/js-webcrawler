@@ -1,5 +1,5 @@
 import { crawlPage } from "./crawl.js";
-const main = () => {
+const main = async () => {
   if (process.argv.length < 3) {
     console.log("no websites provided");
     process.exit(1);
@@ -12,7 +12,11 @@ const main = () => {
 
   const baseUrl = process.argv[2];
 
-  crawlPage(baseUrl);
+  const pages = await crawlPage(baseUrl, baseUrl, {});
+
+  for (const page of Object.entries(pages)) {
+    console.log(page);
+  }
 };
 
 main();
