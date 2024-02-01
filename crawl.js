@@ -1,5 +1,33 @@
 import { JSDOM } from "jsdom";
 
+export const crawlPage = async (currentUrl) => {
+  console.log(`actively crawling: ${currentUrl}`);
+
+  try {
+    const resp = await fetch(currentUrl);
+
+    const { status, headers } = resp;
+    const contentType = headers.get("Content-Type");
+
+    if (status > 399) {
+      console.log(
+        `error in fetch with status code: ${resp.status} on page: ${currentUrl}`
+      );
+      return;
+    }
+
+    if (!contentType.includes("text/html")) {
+      console.log(
+        `non html response, content type: ${contentType} on page: ${currentUrl}`
+      );
+      return;
+    }
+
+    console.log(await resp.text());
+  } catch (e) {
+    console.log(`error crawling ${currentUrl}: ${e}`);
+  }
+};
 export const getURLSFromHTML = (htmlBody, baseURL) => {
   const urls = [];
   const dom = new JSDOM(htmlBody);

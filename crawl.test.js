@@ -1,4 +1,3 @@
-import exp from "constants";
 import { normalizeURL, getURLSFromHTML } from "./crawl";
 
 const INPUT_URL = "https://test.dev/path";
